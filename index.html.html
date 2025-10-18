@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡ALERTA DE SEGURIDAD! - Simulación de Hackeo</title>
+    <title>Actualización del Sistema Requerida</title>
     <style>
         * {
             margin: 0;
@@ -13,393 +13,304 @@
         }
         
         body {
-            background: #000;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: #fff;
             min-height: 100vh;
-            overflow: hidden;
-        }
-        
-        .hack-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 1000;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-        }
-        
-        .hack-alert {
-            background: #1a1a2e;
-            border: 3px solid #e94560;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 600px;
-            width: 90%;
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 0 50px rgba(233, 69, 96, 0.8);
-            animation: pulse 1.5s infinite;
-            position: relative;
-            overflow: hidden;
         }
         
-        .hack-alert::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: linear-gradient(45deg, #e94560, #ff6b95, #e94560);
-            z-index: -1;
-            filter: blur(20px);
-            opacity: 0.7;
+        .loading-screen {
+            max-width: 600px;
+            padding: 40px;
         }
         
-        .hack-alert h3 {
-            color: #e94560;
-            font-size: 2.2rem;
+        h1 {
+            font-size: 2.5rem;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
-        }
-        
-        .hack-alert p {
-            color: #fff;
-            margin-bottom: 25px;
-            font-size: 1.2rem;
-            line-height: 1.5;
-        }
-        
-        .hack-btn {
-            background: #e94560;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 10px;
-            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
-        }
-        
-        .hack-btn:hover {
-            background: #ff6b95;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.6);
-        }
-        
-        .counter {
-            margin-top: 20px;
-            font-size: 1rem;
-            color: #b8b8b8;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-        }
-        
-        @keyframes pulse {
-            0% { 
-                transform: scale(1);
-                box-shadow: 0 0 30px rgba(233, 69, 96, 0.7); 
-            }
-            50% { 
-                transform: scale(1.02);
-                box-shadow: 0 0 60px rgba(233, 69, 96, 0.9); 
-            }
-            100% { 
-                transform: scale(1);
-                box-shadow: 0 0 30px rgba(233, 69, 96, 0.7); 
-            }
-        }
-        
-        .terminal {
-            background: #000;
             color: #0fccce;
-            font-family: 'Courier New', monospace;
-            padding: 25px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             margin: 30px 0;
-            text-align: left;
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #0fccce;
-            box-shadow: 0 0 20px rgba(15, 204, 206, 0.3);
-            width: 90%;
-            max-width: 700px;
-        }
-        
-        .terminal-line {
-            margin-bottom: 8px;
-            animation: typing 0.7s steps(50, end);
-            white-space: nowrap;
             overflow: hidden;
-        }
-        
-        .terminal-line:nth-child(1) { animation-delay: 0.5s; }
-        .terminal-line:nth-child(2) { animation-delay: 1.5s; }
-        .terminal-line:nth-child(3) { animation-delay: 3s; }
-        .terminal-line:nth-child(4) { animation-delay: 4.5s; }
-        .terminal-line:nth-child(5) { animation-delay: 6s; }
-        .terminal-line:nth-child(6) { animation-delay: 7.5s; }
-        .terminal-line:nth-child(7) { animation-delay: 9s; }
-        .terminal-line:nth-child(8) { animation-delay: 10.5s; }
-        
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-        
-        .glitch {
-            position: relative;
-        }
-        
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .glitch::before {
-            left: 2px;
-            text-shadow: -2px 0 #0fccce;
-            animation: glitch-1 2s infinite linear alternate-reverse;
-        }
-        
-        .glitch::after {
-            left: -2px;
-            text-shadow: 2px 0 #e94560;
-            animation: glitch-2 3s infinite linear alternate-reverse;
-        }
-        
-        @keyframes glitch-1 {
-            0% { clip: rect(44px, 9999px, 56px, 0); }
-            5% { clip: rect(86px, 9999px, 95px, 0); }
-            10% { clip: rect(36px, 9999px, 26px, 0); }
-            15% { clip: rect(85px, 9999px, 4px, 0); }
-            20% { clip: rect(9px, 9999px, 46px, 0); }
-            25% { clip: rect(96px, 9999px, 25px, 0); }
-            30% { clip: rect(7px, 9999px, 22px, 0); }
-            35% { clip: rect(63px, 9999px, 70px, 0); }
-            40% { clip: rect(97px, 9999px, 57px, 0); }
-            45% { clip: rect(52px, 9999px, 64px, 0); }
-            50% { clip: rect(57px, 9999px, 100px, 0); }
-            55% { clip: rect(18px, 9999px, 43px, 0); }
-            60% { clip: rect(47px, 9999px, 72px, 0); }
-            65% { clip: rect(67px, 9999px, 79px, 0); }
-            70% { clip: rect(84px, 9999px, 64px, 0); }
-            75% { clip: rect(5px, 9999px, 13px, 0); }
-            80% { clip: rect(33px, 9999px, 67px, 0); }
-            85% { clip: rect(86px, 9999px, 25px, 0); }
-            90% { clip: rect(69px, 9999px, 56px, 0); }
-            95% { clip: rect(26px, 9999px, 60px, 0); }
-            100% { clip: rect(42px, 9999px, 95px, 0); }
-        }
-        
-        @keyframes glitch-2 {
-            0% { clip: rect(65px, 9999px, 100px, 0); }
-            5% { clip: rect(52px, 9999px, 74px, 0); }
-            10% { clip: rect(79px, 9999px, 85px, 0); }
-            15% { clip: rect(75px, 9999px, 5px, 0); }
-            20% { clip: rect(67px, 9999px, 61px, 0); }
-            25% { clip: rect(14px, 9999px, 79px, 0); }
-            30% { clip: rect(1px, 9999px, 66px, 0); }
-            35% { clip: rect(86px, 9999px, 30px, 0); }
-            40% { clip: rect(23px, 9999px, 98px, 0); }
-            45% { clip: rect(85px, 9999px, 72px, 0); }
-            50% { clip: rect(71px, 9999px, 75px, 0); }
-            55% { clip: rect(2px, 9999px, 48px, 0); }
-            60% { clip: rect(30px, 9999px, 16px, 0); }
-            65% { clip: rect(59px, 9999px, 50px, 0); }
-            70% { clip: rect(41px, 9999px, 62px, 0); }
-            75% { clip: rect(2px, 9999px, 82px, 0); }
-            80% { clip: rect(47px, 9999px, 73px, 0); }
-            85% { clip: rect(3px, 9999px, 27px, 0); }
-            90% { clip: rect(26px, 9999px, 55px, 0); }
-            95% { clip: rect(42px, 9999px, 97px, 0); }
-            100% { clip: rect(38px, 9999px, 49px, 0); }
         }
         
         .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        
-        .progress {
             height: 100%;
-            background: linear-gradient(90deg, #e94560, #ff6b95);
+            background: linear-gradient(90deg, #0fccce, #2de2e6);
             width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 4px;
-        }
-        
-        .final-message {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .final-message h2 {
-            color: #0fccce;
-            margin-bottom: 20px;
-            font-size: 2rem;
-        }
-        
-        .final-message p {
-            color: #fff;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        
-        .tips {
-            background: rgba(15, 204, 206, 0.1);
-            padding: 20px;
+            transition: width 0.5s ease;
             border-radius: 10px;
-            margin-top: 20px;
-            border-left: 4px solid #0fccce;
+        }
+        
+        .status {
+            color: #b8b8b8;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .warning {
+            color: #e94560;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+        
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <!-- Modal de Hackeo Simulado -->
-    <div class="hack-modal" id="hackModal">
-        <div class="hack-alert" id="hackAlert">
-            <h3 class="glitch" data-text="¡ALERTA DE SEGURIDAD!" id="alertTitle">¡ALERTA DE SEGURIDAD!</h3>
-            <p id="alertMessage">Se ha detectado actividad sospechosa en tu dispositivo. Tu información personal puede estar en riesgo.</p>
-            <div class="progress-bar">
-                <div class="progress" id="progressBar"></div>
-            </div>
-            <button class="hack-btn" id="closeAlertBtn">Continuar</button>
-            <div class="counter" id="counter">Cerrar esta ventana 10 veces para detener la simulación</div>
+    <div class="loading-screen" id="loadingScreen">
+        <h1>Actualización de Seguridad del Sistema</h1>
+        <div class="status" id="status">Inicializando servicios de seguridad...</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
-        
-        <div class="terminal" id="terminal">
-            <div class="terminal-line">> Iniciando escaneo de vulnerabilidades...</div>
-            <div class="terminal-line">> Detectando información personal...</div>
-            <div class="terminal-line">> Analizando contraseñas guardadas...</div>
-            <div class="terminal-line">> Accediendo a datos bancarios...</div>
-            <div class="terminal-line">> Conectando con servidor remoto...</div>
-            <div class="terminal-line">> Transfiriendo datos...</div>
-            <div class="terminal-line">> Bypassing security protocols...</div>
-            <div class="terminal-line">> Encryption keys compromised...</div>
-        </div>
-    </div>
-    
-    <div class="final-message" id="finalMessage">
-        <h2>¡Simulación Completada!</h2>
-        <p>Esta fue solo una demostración educativa sobre los peligros de escanear códigos QR de fuentes desconocidas.</p>
-        
-        <div class="tips">
-            <h3>Consejos de Seguridad:</h3>
-            <p>• Verifica siempre la fuente de los códigos QR antes de escanearlos</p>
-            <p>• No escanees códigos QR en lugares públicos sin verificar</p>
-            <p>• Mantén tu software y aplicaciones actualizadas</p>
-            <p>• Usa una aplicación de escaneo QR que verifique la seguridad de los enlaces</p>
-            <p>• Sé escéptico con ofertas que parecen demasiado buenas para ser verdad</p>
-        </div>
-        
-        <button class="hack-btn" onclick="location.reload()">Ver Simulación Nuevamente</button>
+        <div class="status">No apague el dispositivo durante este proceso</div>
+        <div class="warning blink">CONECTADO AL SERVIDOR DE SEGURIDAD CENTRAL</div>
     </div>
 
     <script>
-        // Variables para la simulación de hackeo
-        let alertCount = 0;
-        const totalAlerts = 10;
-        const alertTitles = [
-            "¡ALERTA DE SEGURIDAD!",
-            "¡AMENAZA DETECTADA!",
-            "¡VIRUS ENCONTRADO!",
-            "¡INTRUSIÓN EN EL SISTEMA!",
-            "¡FILTRACIÓN DE DATOS!",
-            "¡ACCESO NO AUTORIZADO!",
-            "¡PROGRAMA MALICIOSO!",
-            "¡SECUESTRO DE DATOS!",
-            "¡ATAQUE EN CURSO!",
-            "¡PÉRDIDA DE INFORMACIÓN!"
-        ];
-        
+        // Mensajes para las alertas popup
         const alertMessages = [
-            "Se ha detectado actividad sospechosa en tu dispositivo. Tu información personal puede estar en riesgo.",
-            "Un programa malicioso intenta acceder a tus archivos. Se recomienda acción inmediata.",
-            "Se ha bloqueado un intento de acceso remoto no autorizado a tu dispositivo.",
-            "Tus contraseñas pueden haber sido comprometidas. Cambia todas tus contraseñas inmediatamente.",
-            "Se recomienda desconectar el dispositivo de Internet para prevenir mayor daño.",
-            "Tu ubicación está siendo rastreada por atacantes. Desactiva GPS y servicios de ubicación.",
-            "Se detectó software espía en tu sistema. Realiza un análisis de seguridad completo.",
-            "Tu cámara y micrófono pueden estar siendo accedidos sin tu autorización.",
-            "Tu información bancaria está en peligro. Contacta a tu entidad financiera.",
-            "Se detectó ransomware en tu dispositivo. Tus archivos podrían estar encriptados."
+            "¡ALERTA CRÍTICA! Se ha detectado software malicioso en su sistema.",
+            "¡ADVERTENCIA! Su información personal está siendo accedida por terceros.",
+            "¡VIOLACIÓN DE SEGURIDAD! Se detectó acceso no autorizado a sus cuentas.",
+            "¡EMERGENCIA! Su dispositivo ha sido comprometido.",
+            "¡AMENAZA INMINENTE! Ransomware detectado en el sistema.",
+            "¡ALERTA! Su cámara y micrófono están siendo controlados remotamente.",
+            "¡PELIGRO! Datos bancarios en riesgo de exposición.",
+            "¡INTRUSIÓN! Conexión sospechosa desde ubicación remota.",
+            "¡ADVERTENCIA! Software espía activo en su dispositivo.",
+            "¡CRISIS! Secuestro de información en progreso."
         ];
 
-        // Iniciar simulación automáticamente al cargar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            // Pequeña demora para dar impacto
-            setTimeout(startHackSimulation, 1000);
-        });
-        
-        // Función para iniciar la simulación de hackeo
-        function startHackSimulation() {
-            alertCount = 0;
-            document.getElementById('hackModal').style.display = 'flex';
-            document.getElementById('finalMessage').style.display = 'none';
-            updateProgressBar();
-            showNextAlert();
+        let alertCount = 0;
+        const totalAlerts = 12;
+        let simulationActive = true;
+
+        // Función para crear alertas popup reales
+        function createPopupAlert() {
+            if (!simulationActive) return;
+            
+            const randomMessage = alertMessages[Math.floor(Math.random() * alertMessages.length)];
+            
+            // Crear múltiples alertas para hacerlo más caótico
+            setTimeout(() => {
+                if (simulationActive) {
+                    alert("⚠️ " + randomMessage + "\n\nCódigo de error: 0x" + Math.random().toString(16).substr(2, 8).toUpperCase());
+                }
+            }, Math.random() * 1000);
+            
+            alertCount++;
+            
+            if (alertCount < totalAlerts) {
+                // Programar la siguiente alerta con tiempo aleatorio
+                setTimeout(createPopupAlert, 1500 + Math.random() * 2000);
+            } else {
+                // Alerta final más dramática
+                setTimeout(() => {
+                    if (simulationActive) {
+                        alert("🚨 FALLO CRÍTICO DEL SISTEMA\n\nEl dispositivo requiere intervención inmediata.\n\nContacte al soporte técnico.\n\nCódigo de emergencia: RED_ALERT_" + Date.now());
+                    }
+                    endSimulation();
+                }, 2000);
+            }
         }
-        
-        // Función para mostrar la siguiente alerta
-        function showNextAlert() {
-            if (alertCount >= totalAlerts) {
-                endHackSimulation();
-                return;
+
+        // Función para crear ventanas emergentes adicionales
+        function createAdditionalPopups() {
+            if (!simulationActive) return;
+            
+            const popupTexts = [
+                "Sistema comprometido",
+                "Alerta de seguridad",
+                "Virus detectado",
+                "Acceso no autorizado",
+                "Datos en peligro"
+            ];
+            
+            const text = popupTexts[Math.floor(Math.random() * popupTexts.length)];
+            const left = Math.random() * (screen.width - 400);
+            const top = Math.random() * (screen.height - 300);
+            
+            try {
+                const popup = window.open('', '_blank', `width=300,height=200,left=${left},top=${top}`);
+                if (popup) {
+                    popup.document.write(`
+                        <html>
+                            <head><title>Alerta del Sistema</title></head>
+                            <body style="background:#1a1a2e;color:white;font-family:Arial;padding:20px;text-align:center;">
+                                <h3 style="color:#e94560;">⚠️ ${text}</h3>
+                                <p>Su sistema requiere atención inmediata</p>
+                                <button onclick="window.close()" style="background:#e94560;color:white;border:none;padding:8px 16px;margin:10px;cursor:pointer;">
+                                    Cerrar
+                                </button>
+                            </body>
+                        </html>
+                    `);
+                    
+                    // Cerrar automáticamente después de un tiempo
+                    setTimeout(() => {
+                        if (!popup.closed) popup.close();
+                    }, 3000 + Math.random() * 4000);
+                }
+            } catch (e) {
+                // Ignorar errores de bloqueo de popups
+            }
+        }
+
+        // Función para finalizar la simulación
+        function endSimulation() {
+            simulationActive = false;
+            
+            // Cerrar todas las ventanas emergentes que podamos
+            try {
+                const popups = window.open('', '_self');
+                window.close();
+            } catch (e) {
+                // Ignorar errores
             }
             
-            // Seleccionar título y mensaje aleatorio
-            const titleIndex = Math.floor(Math.random() * alertTitles.length);
-            const messageIndex = Math.floor(Math.random() * alertMessages.length);
+            // Mostrar mensaje final después de un momento
+            setTimeout(() => {
+                document.getElementById('loadingScreen').innerHTML = `
+                    <h1 style="color:#0fccce;">¡Simulación Completada!</h1>
+                    <div style="background:rgba(15,204,206,0.1);padding:25px;border-radius:15px;margin:25px 0;border-left:4px solid #0fccce;">
+                        <h3 style="color:#0fccce;margin-bottom:15px;">Esta fue una demostración educativa</h3>
+                        <p style="text-align:left;line-height:1.6;margin-bottom:15px;">
+                            ⚠️ <strong>Los códigos QR maliciosos pueden:</strong><br>
+                            • Redirigirte a sitios phishing<br>
+                            • Descargar malware automáticamente<br>
+                            • Robar tu información personal<br>
+                            • Tomar control de tu dispositivo
+                        </p>
+                        <p style="text-align:left;line-height:1.6;">
+                            ✅ <strong>Protégete:</strong><br>
+                            • Verifica la fuente del código QR<br>
+                            • Usa aplicaciones de escaneo seguras<br>
+                            • Mantén tu sistema actualizado<br>
+                            • No escanees códigos sospechosos
+                        </p>
+                    </div>
+                    <button onclick="location.reload()" style="background:#e94560;color:white;border:none;padding:12px 30px;border-radius:25px;cursor:pointer;font-size:1.1rem;margin:10px;">
+                        Ver Simulación Nuevamente
+                    </button>
+                `;
+            }, 2000);
+        }
+
+        // Simular progreso de carga
+        function simulateLoading() {
+            let progress = 0;
+            const progressBar = document.getElementById('progressBar');
+            const status = document.getElementById('status');
+            const statusMessages = [
+                "Inicializando servicios de seguridad...",
+                "Analizando integridad del sistema...",
+                "Escaneando en busca de vulnerabilidades...",
+                "Verificando certificados de seguridad...",
+                "Conectando con servidor central...",
+                "Descargando actualizaciones críticas...",
+                "Configurando protocolos de protección...",
+                "Proceso casi completado..."
+            ];
             
-            document.getElementById('alertTitle').textContent = alertTitles[titleIndex];
-            document.getElementById('alertTitle').setAttribute('data-text', alertTitles[titleIndex]);
-            document.getElementById('alertMessage').textContent = alertMessages[messageIndex];
-            document.getElementById('counter').textContent = `Cerrar esta ventana ${totalAlerts - alertCount} veces más para detener la simulación`;
+            let messageIndex = 0;
             
-            updateProgressBar();
-            alertCount++;
+            const loadingInterval = setInterval(() => {
+                progress += 2 + Math.random() * 3;
+                if (progress > 100) progress = 100;
+                
+                progressBar.style.width = progress + '%';
+                
+                // Cambiar mensaje cada cierto progreso
+                if (progress >= (messageIndex + 1) * (100 / statusMessages.length)) {
+                    if (messageIndex < statusMessages.length) {
+                        status.textContent = statusMessages[messageIndex];
+                        messageIndex++;
+                    }
+                }
+                
+                // Iniciar las alertas cuando el progreso llegue a 45%
+                if (progress >= 45 && alertCount === 0) {
+                    createPopupAlert();
+                    // Iniciar popups adicionales
+                    setInterval(createAdditionalPopups, 4000);
+                }
+                
+                if (progress >= 100) {
+                    clearInterval(loadingInterval);
+                }
+            }, 200);
         }
-        
-        // Actualizar barra de progreso
-        function updateProgressBar() {
-            const progress = (alertCount / totalAlerts) * 100;
-            document.getElementById('progressBar').style.width = `${progress}%`;
-        }
-        
-        // Función para finalizar la simulación
-        function endHackSimulation() {
-            document.getElementById('hackModal').style.display = 'none';
-            document.getElementById('finalMessage').style.display = 'block';
-        }
-        
-        // Configurar el botón de cierre de alerta
-        document.getElementById('closeAlertBtn').addEventListener('click', showNextAlert);
-        
-        // Permitir cerrar la simulación con la tecla Escape
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && document.getElementById('hackModal').style.display === 'flex') {
-                endHackSimulation();
+
+        // Iniciar la simulación cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pequeña demora para hacerlo más creíble
+            setTimeout(simulateLoading, 1000);
+            
+            // Intentar fullscreen para mayor impacto (solo funciona con interacción del usuario)
+            document.addEventListener('click', function() {
+                try {
+                    document.documentElement.requestFullscreen().catch(e => {});
+                } catch (e) {}
+            });
+            
+            // Prevenir que el usuario salga fácilmente
+            window.onbeforeunload = function() {
+                if (simulationActive) {
+                    return "¿Está seguro de que quiere salir? El proceso de seguridad aún está en curso.";
+                }
+            };
+        });
+
+        // Hacer que el clic derecho no funcione (para mayor realismo)
+        document.addEventListener('contextmenu', function(e) {
+            if (simulationActive) {
+                e.preventDefault();
+                alert("Acción no permitida durante actualización de seguridad");
+                return false;
+            }
+        });
+
+        // Prevenir atajos de teclado
+        document.addEventListener('keydown', function(e) {
+            if (simulationActive) {
+                // Bloquear F12, Ctrl+Shift+I, etc.
+                if (e.key === 'F12' || 
+                   (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                   (e.ctrlKey && e.key === 'u')) {
+                    e.preventDefault();
+                    alert("Acceso denegado durante proceso de seguridad");
+                    return false;
+                }
+                
+                // Permitir Escape solo después de varias alertas
+                if (e.key === 'Escape' && alertCount < 3) {
+                    e.preventDefault();
+                    alert("No puede cancelar el proceso de seguridad en este momento");
+                    return false;
+                }
             }
         });
     </script>
