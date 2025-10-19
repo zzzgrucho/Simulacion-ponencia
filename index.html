@@ -22,6 +22,7 @@
             justify-content: center;
             padding: 20px;
             text-align: center;
+            overflow: hidden;
         }
         
         .loading-screen {
@@ -65,7 +66,11 @@
         }
         
         .blink {
-            animation: blink 1s infinite;
+            animation: blink 0.5s infinite;
+        }
+        
+        .vibration-effect {
+            animation: vibrate 0.1s infinite;
         }
         
         @keyframes blink {
@@ -73,12 +78,29 @@
             51%, 100% { opacity: 0.3; }
         }
         
+        @keyframes vibrate {
+            0% { transform: translate(0px, 0px); }
+            25% { transform: translate(2px, 2px); }
+            50% { transform: translate(0px, 0px); }
+            75% { transform: translate(-2px, -2px); }
+            100% { transform: translate(0px, 0px); }
+        }
+        
+        .emergency-flash {
+            animation: emergencyFlash 0.3s infinite;
+        }
+        
+        @keyframes emergencyFlash {
+            0%, 100% { background-color: #1a1a2e; }
+            50% { background-color: #e94560; }
+        }
+        
         .hidden {
             display: none;
         }
     </style>
 </head>
-<body>
+<body id="bodyElement">
     <div class="loading-screen" id="loadingScreen">
         <h1>Actualización de Seguridad del Sistema</h1>
         <div class="status" id="status">Inicializando servicios de seguridad...</div>
@@ -90,123 +112,169 @@
     </div>
 
     <script>
-        // Mensajes para las alertas popup
+        // Mensajes para las alertas popup - MÁS AGRESIVOS
         const alertMessages = [
-            "¡ALERTA CRÍTICA! Se ha detectado software malicioso en su sistema.",
-            "¡ADVERTENCIA! Su información personal está siendo accedida por terceros.",
-            "¡VIOLACIÓN DE SEGURIDAD! Se detectó acceso no autorizado a sus cuentas.",
-            "¡EMERGENCIA! Su dispositivo ha sido comprometido.",
-            "¡AMENAZA INMINENTE! Ransomware detectado en el sistema.",
-            "¡ALERTA! Su cámara y micrófono están siendo controlados remotamente.",
-            "¡PELIGRO! Datos bancarios en riesgo de exposición.",
-            "¡INTRUSIÓN! Conexión sospechosa desde ubicación remota.",
-            "¡ADVERTENCIA! Software espía activo en su dispositivo.",
-            "¡CRISIS! Secuestro de información en progreso."
+            "¡ALERTA CRÍTICA! Software malicioso detectado!",
+            "¡EMERGENCIA! Su dispositivo está siendo hackeado!",
+            "¡PELIGRO INMINENTE! Datos en riesgo!",
+            "¡INTRUSIÓN! Acceso no autorizado confirmado!",
+            "¡SECUESTRO DE DATOS! Ransomware activo!",
+            "¡CÁMARA COMPROMETIDA! Grabando sin permiso!",
+            "¡BANCO EN PELIGRO! Cuentas vulneradas!",
+            "¡LOCALIZACIÓN EXPUESTA! Está siendo rastreado!",
+            "¡MICRÓFONO ACTIVO! Escuchando conversaciones!",
+            "¡FALLO DEL SISTEMA! Colapso inminente!"
         ];
 
         let alertCount = 0;
-        const totalAlerts = 12;
+        const totalAlerts = 15; // MÁS ALERTAS
         let simulationActive = true;
+        let vibrationInterval;
+        let emergencyMode = false;
 
-        // Función para crear alertas popup reales
+        // Función para hacer vibrar (simulada en desktop, real en móviles)
+        function startVibration() {
+            // Para dispositivos móviles con API de vibración
+            if (navigator.vibrate) {
+                // Vibración intensa: 500ms vibrando, 100ms pausa (repetir)
+                navigator.vibrate([500, 100, 500, 100, 500, 100, 500, 100, 500]);
+            }
+            
+            // Efecto visual de vibración para todos los dispositivos
+            document.body.classList.add('vibration-effect');
+            
+            // Efecto de flash de emergencia
+            document.body.classList.add('emergency-flash');
+            
+            // Detener después de 5 segundos
+            setTimeout(() => {
+                stopVibration();
+            }, 5000);
+        }
+
+        function stopVibration() {
+            if (navigator.vibrate) {
+                navigator.vibrate(0);
+            }
+            document.body.classList.remove('vibration-effect');
+            document.body.classList.remove('emergency-flash');
+        }
+
+        // Función para crear alertas popup ULTRA RÁPIDAS
         function createPopupAlert() {
             if (!simulationActive) return;
             
             const randomMessage = alertMessages[Math.floor(Math.random() * alertMessages.length)];
             
-            // Crear múltiples alertas para hacerlo más caótico
-            setTimeout(() => {
-                if (simulationActive) {
-                    alert("⚠️ " + randomMessage + "\n\nCódigo de error: 0x" + Math.random().toString(16).substr(2, 8).toUpperCase());
-                }
-            }, Math.random() * 1000);
+            // CREAR MÚLTIPLES ALERTAS SIMULTÁNEAS
+            for (let i = 0; i < 2; i++) {
+                setTimeout(() => {
+                    if (simulationActive) {
+                        // Alertas más cortas y directas
+                        alert("🚨 " + randomMessage);
+                    }
+                }, i * 300); // Alertas casi simultáneas
+            }
             
             alertCount++;
             
+            // INICIAR VIBRACIÓN en la tercera alerta
+            if (alertCount === 3) {
+                startVibration();
+            }
+            
             if (alertCount < totalAlerts) {
-                // Programar la siguiente alerta con tiempo aleatorio
-                setTimeout(createPopupAlert, 1500 + Math.random() * 2000);
+                // ALERTAS MÁS RÁPIDAS: 500-1000ms entre alertas
+                const nextAlertTime = 500 + Math.random() * 500;
+                setTimeout(createPopupAlert, nextAlertTime);
             } else {
-                // Alerta final más dramática
+                // Alerta final ULTRA DRAMÁTICA
                 setTimeout(() => {
                     if (simulationActive) {
-                        alert("🚨 FALLO CRÍTICO DEL SISTEMA\n\nEl dispositivo requiere intervención inmediata.\n\nContacte al soporte técnico.\n\nCódigo de emergencia: RED_ALERT_" + Date.now());
+                        for (let i = 0; i < 3; i++) {
+                            setTimeout(() => {
+                                alert("💀 FALLO CRÍTICO DEL SISTEMA\n\n¡DESCONECTE INMEDIATAMENTE!");
+                            }, i * 800);
+                            setTimeout(() => {
+                                alert("⚠️ COLAPSO DEL SISTEMA\n\n¡TODO COMPROMETIDO!");
+                            }, i * 800 + 400);
+                        }
                     }
-                    endSimulation();
-                }, 2000);
+                    setTimeout(endSimulation, 3000);
+                }, 800);
             }
         }
 
-        // Función para crear ventanas emergentes adicionales
+        // Función para crear ventanas emergentes ADICIONALES MÁS RÁPIDAS
         function createAdditionalPopups() {
             if (!simulationActive) return;
             
             const popupTexts = [
-                "Sistema comprometido",
-                "Alerta de seguridad",
-                "Virus detectado",
-                "Acceso no autorizado",
-                "Datos en peligro"
+                "¡HACKEO EN CURSO!",
+                "¡SISTEMA COMPROMETIDO!",
+                "¡VIRUS DETECTADO!",
+                "¡EMERGENCIA!",
+                "¡PELIGRO!",
+                "¡ALERTA MÁXIMA!",
+                "¡INTRUSIÓN!",
+                "¡FALLO DE SEGURIDAD!"
             ];
             
-            const text = popupTexts[Math.floor(Math.random() * popupTexts.length)];
-            const left = Math.random() * (screen.width - 400);
-            const top = Math.random() * (screen.height - 300);
-            
-            try {
-                const popup = window.open('', '_blank', `width=300,height=200,left=${left},top=${top}`);
-                if (popup) {
-                    popup.document.write(`
-                        <html>
-                            <head><title>Alerta del Sistema</title></head>
-                            <body style="background:#1a1a2e;color:white;font-family:Arial;padding:20px;text-align:center;">
-                                <h3 style="color:#e94560;">⚠️ ${text}</h3>
-                                <p>Su sistema requiere atención inmediata</p>
-                                <button onclick="window.close()" style="background:#e94560;color:white;border:none;padding:8px 16px;margin:10px;cursor:pointer;">
-                                    Cerrar
-                                </button>
-                            </body>
-                        </html>
-                    `);
-                    
-                    // Cerrar automáticamente después de un tiempo
-                    setTimeout(() => {
-                        if (!popup.closed) popup.close();
-                    }, 3000 + Math.random() * 4000);
+            // CREAR MÚLTIPLES POPUPS A LA VEZ
+            for (let i = 0; i < 2; i++) {
+                const text = popupTexts[Math.floor(Math.random() * popupTexts.length)];
+                const left = Math.random() * (screen.width - 400);
+                const top = Math.random() * (screen.height - 300);
+                
+                try {
+                    const popup = window.open('', '_blank', `width=250,height=150,left=${left},top=${top}`);
+                    if (popup) {
+                        popup.document.write(`
+                            <html>
+                                <head><title>¡EMERGENCIA!</title></head>
+                                <body style="background:#e94560;color:white;font-family:Arial;padding:15px;text-align:center;margin:0;">
+                                    <h4 style="margin:10px 0;">🚨 ${text}</h4>
+                                    <p style="font-size:12px;margin:5px 0;">Sistema comprometido</p>
+                                    <button onclick="window.close()" style="background:black;color:white;border:none;padding:5px 10px;margin:5px;cursor:pointer;font-size:10px;">
+                                        CERRAR
+                                    </button>
+                                </body>
+                            </html>
+                        `);
+                        
+                        // Cerrar automáticamente más rápido
+                        setTimeout(() => {
+                            if (!popup.closed) popup.close();
+                        }, 2000 + Math.random() * 2000);
+                    }
+                } catch (e) {
+                    // Ignorar errores de bloqueo de popups
                 }
-            } catch (e) {
-                // Ignorar errores de bloqueo de popups
             }
         }
 
         // Función para finalizar la simulación
         function endSimulation() {
             simulationActive = false;
+            stopVibration();
             
-            // Cerrar todas las ventanas emergentes que podamos
-            try {
-                const popups = window.open('', '_self');
-                window.close();
-            } catch (e) {
-                // Ignorar errores
-            }
-            
-            // Mostrar mensaje final después de un momento
+            // Mostrar mensaje final
             setTimeout(() => {
                 document.getElementById('loadingScreen').innerHTML = `
                     <h1 style="color:#0fccce;">¡Simulación Completada!</h1>
                     <div style="background:rgba(15,204,206,0.1);padding:25px;border-radius:15px;margin:25px 0;border-left:4px solid #0fccce;">
                         <h3 style="color:#0fccce;margin-bottom:15px;">Esta fue una demostración educativa</h3>
                         <p style="text-align:left;line-height:1.6;margin-bottom:15px;">
-                            ⚠️ <strong>Los códigos QR maliciosos pueden:</strong><br>
-                            • Redirigirte a sitios phishing<br>
-                            • Descargar malware automáticamente<br>
-                            • Robar tu información personal<br>
-                            • Tomar control de tu dispositivo
+                            ⚠️ <strong>Los códigos QR maliciosos pueden causar:</strong><br>
+                            • Alertas falsas y ventanas emergentes<br>
+                            • Vibraciones y sonidos molestos<br>
+                            • Robo de información personal<br>
+                            • Instalación de malware<br>
+                            • Secuestro de su dispositivo
                         </p>
                         <p style="text-align:left;line-height:1.6;">
-                            ✅ <strong>Protégete:</strong><br>
-                            • Verifica la fuente del código QR<br>
+                            ✅ <strong>Protégete siempre:</strong><br>
+                            • Verifica la fuente ANTES de escanear<br>
                             • Usa aplicaciones de escaneo seguras<br>
                             • Mantén tu sistema actualizado<br>
                             • No escanees códigos sospechosos
@@ -216,10 +284,10 @@
                         Ver Simulación Nuevamente
                     </button>
                 `;
-            }, 2000);
+            }, 1000);
         }
 
-        // Simular progreso de carga
+        // Simular progreso de carga MÁS RÁPIDO
         function simulateLoading() {
             let progress = 0;
             const progressBar = document.getElementById('progressBar');
@@ -238,7 +306,7 @@
             let messageIndex = 0;
             
             const loadingInterval = setInterval(() => {
-                progress += 2 + Math.random() * 3;
+                progress += 3 + Math.random() * 4; // MÁS RÁPIDO
                 if (progress > 100) progress = 100;
                 
                 progressBar.style.width = progress + '%';
@@ -251,64 +319,55 @@
                     }
                 }
                 
-                // Iniciar las alertas cuando el progreso llegue a 45%
-                if (progress >= 45 && alertCount === 0) {
+                // INICIAR LAS ALERTAS MÁS PRONTO (30% en lugar de 45%)
+                if (progress >= 30 && alertCount === 0) {
                     createPopupAlert();
-                    // Iniciar popups adicionales
-                    setInterval(createAdditionalPopups, 4000);
+                    // Popups adicionales MÁS RÁPIDOS
+                    setInterval(createAdditionalPopups, 2000); // Cada 2 segundos
                 }
                 
                 if (progress >= 100) {
                     clearInterval(loadingInterval);
                 }
-            }, 200);
+            }, 150); // MÁS RÁPIDO
         }
 
         // Iniciar la simulación cuando se carga la página
         document.addEventListener('DOMContentLoaded', function() {
-            // Pequeña demora para hacerlo más creíble
-            setTimeout(simulateLoading, 1000);
-            
-            // Intentar fullscreen para mayor impacto (solo funciona con interacción del usuario)
-            document.addEventListener('click', function() {
-                try {
-                    document.documentElement.requestFullscreen().catch(e => {});
-                } catch (e) {}
-            });
+            // Demora mínima para impacto
+            setTimeout(simulateLoading, 800);
             
             // Prevenir que el usuario salga fácilmente
             window.onbeforeunload = function() {
                 if (simulationActive) {
-                    return "¿Está seguro de que quiere salir? El proceso de seguridad aún está en curso.";
+                    return "¡NO CIERRE! Proceso de seguridad crítico en curso.";
                 }
             };
         });
 
-        // Hacer que el clic derecho no funcione (para mayor realismo)
+        // Bloquear interacciones durante la simulación
         document.addEventListener('contextmenu', function(e) {
             if (simulationActive) {
                 e.preventDefault();
-                alert("Acción no permitida durante actualización de seguridad");
+                alert("¡BLOQUEADO! Acción no permitida durante emergencia.");
                 return false;
             }
         });
 
-        // Prevenir atajos de teclado
         document.addEventListener('keydown', function(e) {
             if (simulationActive) {
-                // Bloquear F12, Ctrl+Shift+I, etc.
                 if (e.key === 'F12' || 
                    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
                    (e.ctrlKey && e.key === 'u')) {
                     e.preventDefault();
-                    alert("Acceso denegado durante proceso de seguridad");
+                    alert("¡ACCESO DENEGADO! Sistema en modo emergencia.");
                     return false;
                 }
                 
-                // Permitir Escape solo después de varias alertas
-                if (e.key === 'Escape' && alertCount < 3) {
+                // Bloquear Escape también
+                if (e.key === 'Escape') {
                     e.preventDefault();
-                    alert("No puede cancelar el proceso de seguridad en este momento");
+                    alert("¡NO PUEDE SALIR! Crisis de seguridad activa.");
                     return false;
                 }
             }
